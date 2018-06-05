@@ -1,6 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
+import fusee_launcher as fusee
+import mock_arguments
+
 
 
 class App(tk.Frame):
@@ -13,6 +16,7 @@ class App(tk.Frame):
         self.payload_path = ''
         self.device_found = False
         self.lbl_length   = 22
+        self.usb_backend  = fusee.HaxBackend.create_appropriate_backend()
 
         root = self.winfo_toplevel()
         root.update()
@@ -46,7 +50,7 @@ class App(tk.Frame):
 
 
     def do_update(self):
-        device = ''
+        device = self.usb_backend.find_device()
         if device and not self.device_found:
             self.device_found = True
             self.lbl_look.configure(text='Device found!')
@@ -76,7 +80,9 @@ class App(tk.Frame):
 
 
     def btn_send_pressed(self):
-        print('btn_send_pressed()')
+        args = mock_arguments.MockArguments()
+        args.payload = self.payload_path
+        fusee.do_hax(args)
 
 
     
