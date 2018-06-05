@@ -12,8 +12,13 @@ class App(tk.Frame):
 
         self.payload_path = ''
         self.device_found = False
+        self.lbl_length   = 22
 
-        self.update()
+        root = self.winfo_toplevel()
+        root.update()
+        root.resizable(0, 0)
+
+        self.do_update()
 
 
 
@@ -31,7 +36,7 @@ class App(tk.Frame):
         self.btn_open = ttk.Button(self, text="Select Payload", command=self.btn_open_pressed)
         self.btn_open.grid(row=2, column=0, padx=8)
 
-        self.lbl_file = ttk.Label(self, text="No payload selected.", justify=tk.LEFT)
+        self.lbl_file = ttk.Label(self, text="No payload selected.    ", justify=tk.LEFT)
         self.lbl_file.grid(row=2, column=1, padx=8)
 
         self.btn_send = ttk.Button(self, text="Launch Fusée!", command=self.btn_send_pressed)
@@ -40,7 +45,7 @@ class App(tk.Frame):
 
 
 
-    def update(self):
+    def do_update(self):
         device = ''
         if device and not self.device_found:
             self.device_found = True
@@ -55,13 +60,17 @@ class App(tk.Frame):
             self.progress.configure(mode='indeterminate', maximum=50)
             self.start(30)
 
-        self.after(333, self.update)
+        self.after(333, self.do_update)
 
 
 
     def btn_open_pressed(self):
-        print('btn_open_pressed()')
-        self.payload_path = askopenfilename(filetypes=[('Binary', '*.bin')], title='Select Payload')
+        path = askopenfilename(filetypes=[('Binary', '*.bin')], title='Select Payload')
+        if path:
+            excess = len(path)-self.lbl_length
+            self.payload_path = path
+            self.lbl_file.configure(text='..'+path[max(0, excess):])
+
         self.validate_form()
 
 
