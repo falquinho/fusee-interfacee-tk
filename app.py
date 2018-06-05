@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter.filedialog import askopenfilename
 
 
 class App(tk.Frame):
@@ -9,9 +10,17 @@ class App(tk.Frame):
         self.grid()
         self.build_widgets()
 
+        self.payload_path = ''
+        self.device_found = False
+
+        self.update()
+
 
 
     def build_widgets(self):
+        style = ttk.Style()
+        style.configure('Horizontal.TProgressbar', background='#5eba21')
+
         self.progress = ttk.Progressbar(self, mode='indeterminate', maximum=50)
         self.progress.grid(row=0, columnspan=2, sticky=tk.W+tk.E)
         self.progress.start(30)
@@ -25,18 +34,46 @@ class App(tk.Frame):
         self.lbl_file = ttk.Label(self, text="No payload selected.", justify=tk.LEFT)
         self.lbl_file.grid(row=2, column=1, padx=8)
 
-        self.btn_send = ttk.Button(self, text="Launch Fusée!", command=self.btn_send_pressed, state=tk.DISABLED)
+        self.btn_send = ttk.Button(self, text="Launch Fusée!", command=self.btn_send_pressed)
         self.btn_send.grid(row=3, column=0, columnspan=2, sticky=tk.W+tk.E, pady=8, padx=8)
+        self.btn_send.state(('disabled',)) # trailing comma to define single element tuple
+
+
+
+    def update(self):
+        device = ''
+        if device and not self.device_found:
+            self.device_found = True
+            self.lbl_look.configure(text='Device found!')
+            self.progress.stop()
+            self.progress.configure(mode='determinate', maximum=1000)
+            self.progress.step(999)
+
+        elif not device and self.device_found:
+            self.device_found = False
+            self.lbl_look.configure(text='Looking for device...')
+            self.progress.configure(mode='indeterminate', maximum=50)
+            self.start(30)
+
+        self.after(333, self.update)
 
 
 
     def btn_open_pressed(self):
         print('btn_open_pressed()')
+        self.payload_path = askopenfilename(filetypes=[('Binary', '*.bin')], title='Select Payload')
+        self.validate_form()
 
 
 
     def btn_send_pressed(self):
         print('btn_send_pressed()')
+
+
+    
+    def validate_form(self):
+        if self.payload_path and self.device_found:
+            self.btn_send.state(('!disabled',))
 
 
 
