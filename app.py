@@ -50,7 +50,7 @@ class App(tk.Frame):
 
 
     def do_update(self):
-        device = self.usb_backend.find_device()
+        device = self.usb_backend.find_device(0x0955, 0x7321)
         if device and not self.device_found:
             self.device_found = True
             self.lbl_look.configure(text='Device found!')
@@ -62,7 +62,7 @@ class App(tk.Frame):
             self.device_found = False
             self.lbl_look.configure(text='Looking for device...')
             self.progress.configure(mode='indeterminate', maximum=50)
-            self.start(30)
+            self.progress.start(30)
 
         self.after(333, self.do_update)
 
@@ -81,7 +81,8 @@ class App(tk.Frame):
 
     def btn_send_pressed(self):
         args = mock_arguments.MockArguments()
-        args.payload = self.payload_path
+        args.payload   = self.payload_path
+        args.relocator = 'intermezzo.bin'
         fusee.do_hax(args)
 
 
