@@ -14,3 +14,17 @@ A very simple GUI for applying [Team {Re}Switched Fusée Launcher script](https:
 * __On Windows__ have [libusbk](http://libusbk.sourceforge.net/UsbK3/index.html) as the device driver.
 * __On Linux__ have libusb1 installed (you probably already have).
 * Download/clone this repo and simply run `app.py` like you would any python script.
+
+
+### 2. Running binary file
+### 2.1. Linux
+* Download the linux binary from the [releases page](https://github.com/falquinho/fusee-interfacee-tk/releases) and run it. It *should* simply work.
+
+
+## Using Fusée Launcher Interfacée
+The app is very simple, it should be very intuitive to use:
+* Click the `Select Payload` button to browse your files and select the desired payload.
+* Connect your Switch in RCM mode to the computer. The progress bar will stop and fill up when the device is detected.
+* When the `Launch Fusée!` button activate simply click it.
+
+
