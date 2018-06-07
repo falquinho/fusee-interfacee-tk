@@ -83,7 +83,7 @@ class App(tk.Frame):
     def btn_send_pressed(self):
         args = mock_arguments.MockArguments()
         args.payload   = self.payload_path
-        args.relocator = 'intermezzo.bin'
+        args.relocator = self.build_relocator_path()
         fusee.do_hax(args)
 
 
@@ -91,6 +91,20 @@ class App(tk.Frame):
     def validate_form(self):
         if self.payload_path and self.device_found:
             self.btn_send.state(('!disabled',))
+        else:
+            self.btn_send.state(('disabled',))
+
+    
+
+    def build_relocator_path(self):
+        import sys
+        import os
+        try:
+            path = sys._MEIPASS
+        except Exception:
+            path = os.path.abspath('.')
+
+        return os.path.join(path, 'intermezzo.bin')
 
 
 
