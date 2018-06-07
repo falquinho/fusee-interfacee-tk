@@ -336,30 +336,36 @@ class WindowsBackend(HaxBackend):
         device_info = ctypes.pointer(self.libk.KLST_DEV_INFO())
         ret = self.lib.LstK_Init(ctypes.byref(device_list), 0)
 
-        # I don't see a need to raise an Exception and it prevents my app
-        # to function correctly, so I'll change to a simple return.
-        # Let's hope nothing breaks.
-        #                                                      -falquinho
+        # Removed exception to not block app.-falquinho
         if ret == 0:
+            print('Lstk_Init(): Error')
             return None
+            
 
         # Get info for a device with that vendor ID and product ID
-        device_info = ctypes.pointer(self.libk.KLST_DEV_INFO())
+        # device_info should either be a pointer or be passed 'byref'
+        # not both. I'll make it NOT a pointer.-falquinho
+        device_info = self.libk.KLST_DEV_INFO()
         ret = self.lib.LstK_FindByVidPid(device_list, Vid, Pid, ctypes.byref(device_info))
-        self.lib.LstK_Free(ctypes.byref(device_list))
+        # LstK_Free parameter is NOT a pointer
+        self.lib.LstK_Free(device_list)
         if device_info is None or ret == 0:
+            #print('device_info is None or ret == 0')
             return None
 
         # Populate function pointers for use with the driver our device uses (which should be libusbK)
         self.dev = self.libk.KUSB_DRIVER_API()
         ret = self.lib.LibK_LoadDriverAPI(ctypes.byref(self.dev), device_info.contents.DriverID)
         if ret == 0:
+            print('LibK_LoadDriverAPI(): Error')
             return None
 
         # Initialize the driver for use with our device
         self.handle = self.libk.KUSB_HANDLE(None)
-        ret = self.dev.Init(ctypes.byref(self.handle), device_info)
+        # Passing device_info 'byref'
+        ret = self.dev.Init(ctypes.byref(self.handle), ctypes.byref(device_info))
         if ret == 0:
+            print('dev.Init(): Error')
             return None
 
         return self.dev
