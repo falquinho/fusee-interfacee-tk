@@ -336,8 +336,12 @@ class WindowsBackend(HaxBackend):
         device_info = ctypes.pointer(self.libk.KLST_DEV_INFO())
         ret = self.lib.LstK_Init(ctypes.byref(device_list), 0)
 
+        # I don't see a need to raise an Exception and it prevents my app
+        # to function correctly, so I'll change to a simple return.
+        # Let's hope nothing breaks.
+        #                                                      -falquinho
         if ret == 0:
-            raise ctypes.WinError()
+            return None
 
         # Get info for a device with that vendor ID and product ID
         device_info = ctypes.pointer(self.libk.KLST_DEV_INFO())
@@ -350,13 +354,13 @@ class WindowsBackend(HaxBackend):
         self.dev = self.libk.KUSB_DRIVER_API()
         ret = self.lib.LibK_LoadDriverAPI(ctypes.byref(self.dev), device_info.contents.DriverID)
         if ret == 0:
-            raise ctypes.WinError()
+            return None
 
         # Initialize the driver for use with our device
         self.handle = self.libk.KUSB_HANDLE(None)
         ret = self.dev.Init(ctypes.byref(self.handle), device_info)
         if ret == 0:
-            raise self.libk.WinError()
+            return None
 
         return self.dev
 
