@@ -63,7 +63,8 @@ class App(tk.Frame):
             self.lbl_look.configure(text='Looking for device...')
             self.progress.configure(mode='indeterminate', maximum=50)
             self.progress.start(30)
-
+        
+        self.validate_form()
         self.after(333, self.do_update)
 
 
