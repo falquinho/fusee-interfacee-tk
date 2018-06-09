@@ -1,3 +1,4 @@
+![A cute rocket in outerspace!](icon.png)
 # Fusée Launcher Interfacée
 A very simple GUI for applying [Team {Re}Switched Fusée Launcher script](https://github.com/reswitched/fusee-launcher) onto your Nintendo Switch.
 
@@ -30,6 +31,8 @@ You can run this app as a simple python script or by executing the binary file f
 
 ## Using Fusée Launcher Interfacée
 The app is very simple, it should be very intuitive to use:
+
+![App looking for a device.](https://image.ibb.co/n1CEv8/fusee_interfacee_ss0.png) ![App found a device and is ready!](https://image.ibb.co/ep6ra8/fusee_interfacee_ss1.png)
 * Click the `Select Payload` button to browse your files and select the desired payload.
 * Connect your Switch in RCM mode to the computer. The progress bar will stop and fill up when the device is detected.
 * When the `Launch Fusée!` button activate simply click it.
